@@ -2,6 +2,8 @@ import streamlit as st
 from agents.agent_retriever import create_agent_executor
 from agents.agent_router import multiagent_pipeline
 
+api_key = st.secrets["GOOGLE_API_KEY"]
+
 st.set_page_config(page_title="Policy Helper (BETA)", layout="wide")
 st.title("Policy Helper", text_alignment="center")
 st.caption("Pergunte sobre conteúdos/moderação politicas publicas META.", text_alignment= "center")

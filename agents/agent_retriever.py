@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from langchain_chroma.vectorstores import Chroma
 from models.models import gemini_model
 from langgraph.checkpoint.memory import InMemorySaver
+import streamlit as st
 
 import os
 
@@ -41,10 +42,11 @@ Responda agora com base no protocolo acima:
 
 load_dotenv(override=True)
 
+api_key = st.secrets["GOOGLE_API_KEY"]
 
 # ── Fábrica: chamada UMA vez pelo Streamlit via st.session_state ──────────────
 def create_agent_executor():
-    model = gemini_model()
+    model = gemini_model(api_key)
     memory = InMemorySaver()
     agent = create_agent(model=model, tools=[], checkpointer=memory)
     return agent

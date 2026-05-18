@@ -7,10 +7,10 @@ import os
 
 load_dotenv(override=True)
 
-def gemini_model():
+def gemini_model(api_key):
     model = ChatGoogleGenerativeAI(
         model="gemini-3.1-flash-lite",
-        google_api_key=os.environ.get("GOOGLE_API_KEY"),
+        google_api_key=os.environ.get(api_key),
         temperature=0.4,
         max_tokens=None,
         timeout=15

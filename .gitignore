@@ -28,4 +28,4 @@ htmlcov/
 .pytype_check/
 .pyre_cache/
 .pytype_cache/          
-
+.streamlit
