@@ -3,9 +3,12 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from openai import OpenAI
 from dotenv import load_dotenv
 import google.genai as genai
+import streamlit as st
 import os
 
 load_dotenv(override=True)
+
+api_key = st.secrets["GOOGLE_API_KEY"]
 
 def gemini_model(api_key):
     model = ChatGoogleGenerativeAI(

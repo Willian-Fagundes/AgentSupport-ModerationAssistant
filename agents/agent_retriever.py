@@ -42,11 +42,11 @@ Responda agora com base no protocolo acima:
 
 load_dotenv(override=True)
 
-api_key = st.secrets["GOOGLE_API_KEY"]
+
 
 # ── Fábrica: chamada UMA vez pelo Streamlit via st.session_state ──────────────
 def create_agent_executor():
-    model = gemini_model(api_key)
+    model = gemini_model()
     memory = InMemorySaver()
     agent = create_agent(model=model, tools=[], checkpointer=memory)
     return agent
