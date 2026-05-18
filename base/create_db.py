@@ -47,14 +47,14 @@ def vetorize_chunks(chunks):
         embedding=embedding,
         persist_directory=persist_directory
     )
-    print("Waiting 65 seconds...")
+    print("Waiting 15 seconds...")
     time.sleep(15)  # espera após o primeiro batch também
 
     for i in range(batch_size, len(chunks), batch_size):
         batch = chunks[i : i + batch_size]
         print(f"Processing chunks {i} to {i + len(batch)}...")
         db.add_documents(batch)
-        print("Waiting 65 seconds to avoid rate limits...")
+        print("Waiting 35 seconds to avoid rate limits...")
         time.sleep(35)  # sempre espera, não só quando tem próximo batch
 
     print("DB Criado")

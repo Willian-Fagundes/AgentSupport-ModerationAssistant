@@ -45,6 +45,11 @@ Responda agora com base no protocolo acima:
 
 load_dotenv(override=True)
 
+print("BASE_DIR:", BASE_DIR)
+print("BD_PATH:", BD_PATH)
+print("DB existe?", os.path.exists(BD_PATH))
+print("Conteúdo:", os.listdir(BD_PATH) if os.path.exists(BD_PATH) else "pasta não encontrada")
+
 
 
 # ── Fábrica: chamada UMA vez pelo Streamlit via st.session_state ──────────────
@@ -64,7 +69,7 @@ def search_kb(pergunta: str) -> str | None:
     
     embedding = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
     db = Chroma(persist_directory=BD_PATH, embedding_function=embedding)
-
+    print("Total de documentos:", db._collection.count())
     results = db._similarity_search_with_relevance_scores(pergunta)
 
     if not results or results[0][1] < RELEVANCE_THRESHOLD:
