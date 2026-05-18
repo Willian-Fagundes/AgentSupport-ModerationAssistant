@@ -5,12 +5,11 @@ from dotenv import load_dotenv
 from langchain_chroma.vectorstores import Chroma
 from models.models import gemini_model
 from langgraph.checkpoint.memory import InMemorySaver
-from langchain_huggingface import HuggingFaceEmbeddings
 
 import os
 
 BD_PATH = 'DB'
-RELEVANCE_THRESHOLD = 0.55
+RELEVANCE_THRESHOLD = 0.51
 
 UNCERTAINTY_MARKERS = [
     "fora do meu escopo",
@@ -45,28 +44,19 @@ load_dotenv(override=True)
 
 # ── Fábrica: chamada UMA vez pelo Streamlit via st.session_state ──────────────
 def create_agent_executor():
-    """
-    Cria e retorna um agente LangGraph com memória própria.
-    Deve ser chamado apenas uma vez por sessão do Streamlit.
-    """
     model = gemini_model()
     memory = InMemorySaver()
     agent = create_agent(model=model, tools=[], checkpointer=memory)
     return agent
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
 def is_uncertain(response_text: str) -> bool:
     lower = response_text.lower()
     return any(marker in lower for marker in UNCERTAINTY_MARKERS)
 
 
 def search_kb(pergunta: str) -> str | None:
-    """
-    Busca na base vetorial pela pergunta atual.
-    O histórico de conversa já é gerenciado pelo LangGraph — não precisa ser
-    passado aqui.
-    """
+    
     embedding = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
     db = Chroma(persist_directory=BD_PATH, embedding_function=embedding)
 
@@ -80,10 +70,7 @@ def search_kb(pergunta: str) -> str | None:
 
 
 def invoke_agent(agent, thread_id: str, prompt_formatted: str) -> str:
-    """
-    Invoca o agente reutilizando o checkpointer já existente.
-    O thread_id fixo garante continuidade da conversa entre reruns do Streamlit.
-    """
+
     config = {"configurable": {"thread_id": thread_id}}
     response = agent.invoke({"messages": [prompt_formatted]}, config)
     content = response["messages"][-1].content
@@ -100,20 +87,10 @@ def invoke_agent(agent, thread_id: str, prompt_formatted: str) -> str:
 
 
 # ── Ponto de entrada principal ────────────────────────────────────────────────
-def process_message(
-    pergunta: str,
-    agent,
-    thread_id: str = "session-1",
-) -> tuple[str, bool]:
-    """
-    Processa a pergunta e retorna (resposta, precisa_de_contexto).
-
-    Parâmetros
-    ----------
-    pergunta   : texto do usuário
-    agent      : instância do agente vinda de st.session_state (não recriar aqui)
-    thread_id  : ID fixo da sessão para o LangGraph manter o histórico
-    """
+def process_message(pergunta: str,agent,
+                    thread_id: str = "session-1",
+                    ) -> tuple[str, bool]:
+    
     kb = search_kb(pergunta)
 
     if kb is None:

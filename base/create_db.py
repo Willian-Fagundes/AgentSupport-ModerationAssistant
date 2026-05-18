@@ -38,7 +38,7 @@ def chunk_data(docs):
 def vetorize_chunks(chunks):
     embedding = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
     persist_directory = "DB"
-    batch_size = 20  # menor batch
+    batch_size = 50  # menor batch
 
     first_batch = chunks[:batch_size]
     print(f"Initializing DB with the first {len(first_batch)} chunks...")
@@ -48,14 +48,14 @@ def vetorize_chunks(chunks):
         persist_directory=persist_directory
     )
     print("Waiting 65 seconds...")
-    time.sleep(65)  # espera após o primeiro batch também
+    time.sleep(15)  # espera após o primeiro batch também
 
     for i in range(batch_size, len(chunks), batch_size):
         batch = chunks[i : i + batch_size]
         print(f"Processing chunks {i} to {i + len(batch)}...")
         db.add_documents(batch)
         print("Waiting 65 seconds to avoid rate limits...")
-        time.sleep(65)  # sempre espera, não só quando tem próximo batch
+        time.sleep(35)  # sempre espera, não só quando tem próximo batch
 
     print("DB Criado")
     print(f"Total de chunks: {db._collection.count()}")
