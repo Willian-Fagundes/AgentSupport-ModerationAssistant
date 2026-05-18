@@ -10,10 +10,10 @@ load_dotenv(override=True)
 
 api_key = st.secrets["GOOGLE_API_KEY"]
 
-def gemini_model(api_key):
+def gemini_model():
     model = ChatGoogleGenerativeAI(
         model="gemini-3.1-flash-lite",
-        google_api_key=os.environ.get(api_key),
+        google_api_key=api_key,
         temperature=0.4,
         max_tokens=None,
         timeout=15
