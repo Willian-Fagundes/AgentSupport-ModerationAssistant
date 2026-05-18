@@ -57,8 +57,8 @@ def vetorize_chunks(chunks):
         batch = chunks[i : i + batch_size]
         print(f"Processing chunks {i} to {i + len(batch)}...")
         db.add_documents(batch)
-        print("Waiting 35 seconds to avoid rate limits...")
-        time.sleep(35)
+        print("Waiting 60 seconds to avoid rate limits...")
+        time.sleep(60)
 
     print("DB Criado")
     print(f"Total de chunks: {db._collection.count()}")
